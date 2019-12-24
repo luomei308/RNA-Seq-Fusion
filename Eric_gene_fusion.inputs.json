@@ -1,5 +1,5 @@
 {
-  "fusion_flow.ericscript_dock":"cgrlab/ericscript:v2",
+  "fusion_flow.ericscript_dock":"dockerluom/ericscript",
   "fusion_flow.outdir":"/workspace/luom/leukemia/results/fusion/",
   "fusion_flow.Sample_names": "/workspace/luom/leukemia/analysis/fusion/paired_SAM_FASTQ_trim.list1",
   "fusion_flow.data_path":"/workspace/luom/leukemia/data/paired_SAM_FASTQ_trim",
