@@ -1,0 +1,51 @@
+##########     RNA-seq gene fusion Pipeline  ##########
+
+workflow fusion_flow{
+String ericscript_dock
+File Sample_names
+String outdir
+String data_path
+String database
+Array[Array[String]] inputSamples = read_tsv(Sample_names)
+############## CALL ##################
+
+scatter (Samplename in inputSamples){
+
+call get_fusion{
+    input:Samplename=Samplename[0],
+        outdir=outdir,
+        data_path=data_path,
+        ericscript_dock=ericscript_dock,
+        database=database,
+
+
+
+}
+}
+}
+
+##############  TASKS  ################
+############   get fusion   ############
+task get_fusion{
+
+String outdir
+String Samplename
+String ericscript_dock
+String data_path
+String database
+command {
+    docker run --user $EUID -v ${data_path}:/data -v ${outdir}:/out_dir -v ${database}:/database ${ericscript_dock} \
+    perl /opt/EricScript/ericscript.pl -p 32 \
+    -db /database \
+    -name ${Samplename} \
+    -o /out_dir/${Samplename}.fusi /data/${Samplename}_1p_trim.fastq.gz /data/${Samplename}_2p_trim.fastq.gz >> ${outdir}/${Samplename}.log 2>&1 && \
+    rm -r ${outdir}/${Samplename}.fusi/aln  && \
+    echo "complete" ${Samplename} ":" `date` >> ${outdir}/benchmarks.log
+}
+
+output {
+    File results="${outdir}/"
+}
+
+}
+
